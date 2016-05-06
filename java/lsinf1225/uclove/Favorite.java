@@ -2,6 +2,7 @@ package lsinf1225.uclove;
 import java.lang.*;
 
 /**
+ * classe permettant la creation dun objet favorite qui donne les preference dun user
  * Created by cariamole on 02.05.16.
  */
 public class Favorite{
@@ -20,7 +21,7 @@ public class Favorite{
 
     public Favorite() {
     }
-
+    //cree un favorite a laide dun entier
     public Favorite(int i) {
         Favorite fav;
         fav = intToFav(i);
@@ -62,7 +63,7 @@ public class Favorite{
     public int getMin(){
         return min;
     }
-
+    //retourne un favorite a laide dun entier a laide de decalage de bit et de la valeur booleenne que chaque bit possede
     public Favorite intToFav(int n){
         int maxI=n>>>21;
         int minI=(n<<11)>>>21;
@@ -98,7 +99,7 @@ public class Favorite{
         Favorite fav=new Favorite(hair, eyes, place, minI,maxI);
         return fav;
     }
-
+    //prends un Favorite et retourne l entier correspondant pour pouvoir le rajouter a la table person
     public int favToInt(){
         int code=0;
         boolean[] hair=this.getHair();
