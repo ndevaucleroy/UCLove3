@@ -5,14 +5,14 @@ import android.content.Context;
 import java.util.ArrayList;
 
 /**
- * Class Availability
+ * Classe Availability lie un login et une date pour lequel le login est libre. 
  * Created by Guillaume on 29/04/16.
  */
 public class Availability {
     private String login;
     private String date;
 
-    // Constructeur
+    // Constructeur basic qui initialise le login et la date.
     public Availability(String login, String date) {
         this.login = login;
         this.date = date;
@@ -21,7 +21,7 @@ public class Availability {
     public Availability(){
 
     }
-
+    // Les fonctions get et set pour avoir acces aux variables et pour pouvoir les modifier
     public String getLogin() {
         return login;
     }
@@ -38,7 +38,7 @@ public class Availability {
         this.date = date;
     }
 
-    // NEW
+    // Appel la methode addAvailability de AvailabilityManager
     public void addAvailability(User user, String date, Context context) {
         AvailabilityManager aM = new AvailabilityManager(context);
         aM.open();
@@ -46,7 +46,7 @@ public class Availability {
         aM.close();
     }
 
-    // NEW
+    // Appel la methode getSameAvailability de AvailabilityManager
     public ArrayList<String> getSameAvailability(User user1, User user2, Context context) {
         AvailabilityManager aM = new AvailabilityManager(context);
         aM.open();
