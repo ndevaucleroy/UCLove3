@@ -29,7 +29,7 @@ public class UserManager {
     public static final String PERSON_GENDER = "gender";
     public static final String PERSON_ORIENTATION = "orientation";
     public static final String PERSON_FAVORITE = "favorite";
-    //Create
+    //Create person selon une requete SQL
     public static final String PERSON_TABLE_CREATE =
             "CREATE TABLE " + TABLE_PERSON + " (" +
                     PERSON_LOGIN + " TEXT PRIMARY KEY, " +
@@ -53,7 +53,7 @@ public class UserManager {
     public UserManager(Context context) {
         maBaseSQLite = DatabaseHandler.getInstance(context);
     }
-
+    //ouverture de la database
     public void open() {
         db = maBaseSQLite.getWritableDatabase();
     }
@@ -61,7 +61,7 @@ public class UserManager {
     public void close() {
         db.close();
     }
-
+    //ajout d'une entree dans person a l'aide d'un user en argument
     public long addUser(User user) {
         ContentValues values = new ContentValues();
 
@@ -81,7 +81,7 @@ public class UserManager {
 
         return db.insert(TABLE_PERSON, null, values);
     }
-
+    //modification dune entree de la table user a laide de largument user
     public int modUser(User user) {
         ContentValues values = new ContentValues();
 
@@ -104,15 +104,15 @@ public class UserManager {
 
         return db.update(TABLE_PERSON, values, where, whereArgs);
     }
-
+    //supprime lentre relative au user u de la table person
     public int supUser(User user) {
         String where = PERSON_LOGIN + " = ?";
         String[] whereArgs = {""+user.getLoginStr()};
 
         return db.delete(TABLE_PERSON, where, whereArgs);
     }
-
-    public User getUserStr(String login) { //please dont use this ! Use new User(String login); instead !!!!
+    //retourne un user en fonction dun login donne (unique)
+    public User getUserStr(String login) { 
         User u = new User();
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_PERSON+" WHERE "+PERSON_LOGIN+" = '"+login+"'",null);
         if(c.moveToFirst()){
@@ -133,6 +133,7 @@ public class UserManager {
         }
         return u;
     }
+    //
     public boolean loadUserStr(User u){ //this is called from the second contructor of User, new User(String login);
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_PERSON+" WHERE "+PERSON_LOGIN+" = '"+u.getLoginStr()+"'",null);
         if(c.moveToFirst()){
@@ -210,7 +211,7 @@ public class UserManager {
         catch(NullPointerException n){}
         return listPoss;
     }
-
+    //regarde la validite dun login vu quil doivent etre uniques
     public boolean isLoginAvailable(String login) {
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_PERSON + " WHERE " + PERSON_LOGIN + " = '" + login+"'", null);
         return (false == c.moveToFirst());
