@@ -36,10 +36,12 @@ public class DiscussionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //charge les textview
         setContentView(R.layout.activity_discussion);
         headText = (TextView) findViewById(R.id.headText);
         headText.setText(MyApplication.getUserChat().getFirstNameStr());
         historic = (TextView) findViewById(R.id.hist);
+        //recherche l'historique de messages
         FriendshipManager fM = new FriendshipManager(this);
         fM.open();
         historic.setText(fM.getChatHistory(MyApplication.getUser(), MyApplication.getUserChat()));
@@ -48,6 +50,7 @@ public class DiscussionActivity extends AppCompatActivity {
         scroll = (ScrollView) findViewById(R.id.scroll);
         scroll.fullScroll(View.FOCUS_DOWN);
 
+        //accede au profil de la personne avec qui l'on chat
         friendPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +106,8 @@ public class DiscussionActivity extends AppCompatActivity {
         sendButton = (ImageButton) findViewById(R.id.send);
 
         msg = (EditText) findViewById(R.id.msg);
-
+        
+        //envoie un message
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,15 +116,16 @@ public class DiscussionActivity extends AppCompatActivity {
                     fM.open();
                     String newHistory = historic.getText().toString();
                     Calendar calendar = GregorianCalendar.getInstance();
+                    //rajoute un message a l'historique
                     newHistory += "[" + MyApplication.getUser().getFirstNameStr() + ", " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + "] " + msg.getText().toString() + "\n";
                     Friendship fs = new Friendship(MyApplication.getUser().getLoginStr(), MyApplication.getUserChat().getLoginStr(), newHistory);
                     fM.modFriendship(fs);
                     fs = new Friendship(MyApplication.getUserChat().getLoginStr(), MyApplication.getUser().getLoginStr(), newHistory);
-                    fM.modFriendship(fs);
+                    fM.modFriendship(fs); // met a jour la BDD
                     fM.close();
-                    historic.setText(newHistory);
-                    msg.setText("");
-                    scroll.fullScroll(View.FOCUS_DOWN);
+                    historic.setText(newHistory); //met a jour l'historique affiche
+                    msg.setText(""); // nettoie la zone de message
+                    scroll.fullScroll(View.FOCUS_DOWN); // desscend l'historique pour montrer les messages les plus recents
                 }
             }
         });
