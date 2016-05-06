@@ -17,13 +17,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 
-/**
- * Created by Michel on 06-05-16.
- */
+
 public class DisponibilityActivity extends AppCompatActivity {
     private Button save;
     private ImageButton yesOrNoButton, friendsRequestButton, friendsButton, profileButton, settingsButton;
-    private CheckBox[] dates = new CheckBox [30];
+    private CheckBox[] dates = new CheckBox [30]; // un mois de dates possibles
 
 
 
@@ -31,11 +29,12 @@ public class DisponibilityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disponibility);
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = GregorianCalendar.getInstance(); //permet d'obtenir les dates
         final User user=MyApplication.getUser();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         final AvailabilityManager aM = new AvailabilityManager (this);
         aM.open();
+        // mets les 30 checkbox aux 30 prochains jours et les coche si l'on a deja precise sa disponibilite
         for (int i = 0; i < 30; i++)
         {
             int resID = getResources().getIdentifier("c"+i, "id", getPackageName());
@@ -82,7 +81,8 @@ public class DisponibilityActivity extends AppCompatActivity {
             public void onClick(View v) {
                 aM.open();
                 for(int i =0; i<30; i++) {
-                    if (dates[i].isChecked()) {
+                    //verifie si la checkbox est coche, se met disponible dans la BDD si oui et indisponible sinon
+                    if (dates[i].isChecked()) { 
                         aM.addAvailability(new Availability(user.getLoginStr(), dates[i].getText().toString()));
                     } else {
                         aM.supAvailability(new Availability(user.getLoginStr(), dates[i].getText().toString()));
@@ -90,6 +90,7 @@ public class DisponibilityActivity extends AppCompatActivity {
                 }
                 aM.close();
                 Toast.makeText(DisponibilityActivity.this, "Availabilities Saved", Toast.LENGTH_LONG).show();
+                //retour a profil
                 Intent intent = new Intent(v.getContext(), ProfileActivity.class);
                 startActivity(intent);
             }
