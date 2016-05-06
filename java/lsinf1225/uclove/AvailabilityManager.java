@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 /**
- *
+ * Classe qui permet de gérer les requete vers la table availability
  * Created by Guillaume on 29/04/16.
  */
 public class AvailabilityManager {
@@ -17,7 +17,7 @@ public class AvailabilityManager {
     public static final String TABLE_AVAILABILITY = "availability";
     public static final String AVAILABILITY_LOGIN = "login";
     public static final String AVAILABILITY_DATE = "date";
-    //Availability
+    //to create availability table
     public static final String AVAILABILITY_TABLE_CREATE =
             "CREATE TABLE " + TABLE_AVAILABILITY + " (" +
                     AVAILABILITY_LOGIN + " TEXT not null references " + TABLE_PERSON + ", " +
@@ -26,7 +26,6 @@ public class AvailabilityManager {
 
     private DatabaseHandler maBaseSQLite; // notre gestionnaire du fichier SQLite
     private SQLiteDatabase db;
-
 
     public AvailabilityManager(Context context) {
         maBaseSQLite = DatabaseHandler.getInstance(context);
@@ -44,7 +43,6 @@ public class AvailabilityManager {
         db.close();
     }
 
-    // MODIF!!!!
     public long addAvailability(Availability availability) {
         // Ajout d'un enregistrement dans la table
         ContentValues values = new ContentValues();
@@ -69,7 +67,7 @@ public class AvailabilityManager {
         // Retourne l'availability de login et de date.
 
         Availability a=new Availability();
-
+        // Le curseur prend ce que la requete renvoie
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_AVAILABILITY+" WHERE "+AVAILABILITY_LOGIN+"='"+login+"' and "+AVAILABILITY_DATE+"='"+date+"'", null);
         if (c.moveToFirst()) {
             a.setLogin(c.getString(c.getColumnIndex(AVAILABILITY_LOGIN)));
@@ -90,7 +88,6 @@ public class AvailabilityManager {
         return db.rawQuery("SELECT * FROM "+TABLE_AVAILABILITY, null);
     }
 
-    // NEW
     // Retourne une ArrayList contenant les dates libres commune entre user1 et user2
     public ArrayList<String> getSameAvailability(User user1, User user2) {
         ArrayList<String> same = new ArrayList<>();
@@ -115,7 +112,7 @@ public class AvailabilityManager {
         }
         return same;
     }
-
+    // Previens si la date est libre
     public boolean isAvailable(User user, String date) {
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_AVAILABILITY+" WHERE "+AVAILABILITY_LOGIN+"='"+user.getLoginStr()+"' and "+AVAILABILITY_DATE+"='"+date+"'", null);
         return (c.moveToFirst());
