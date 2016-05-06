@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 
 
 /**
- * Write a description of class Chat here.
+ * Objet Chat qui permet a deux amis de chatter
  *
  * @author Groupe P
  * @version 25.04.2016
@@ -19,7 +19,7 @@ public class Chat
     private String chatHistory;
 
     /**
-     * Constructor for objects of class Chat
+     * Constructeur de base
      */
     public Chat(String friend1, String friend2, String chatHistory){
         // initialise instance variables, mais on est pas sensé utiliser mais
@@ -27,7 +27,7 @@ public class Chat
         this.friend2 = friend2;
         this.chatHistory = chatHistory;
     }
-
+    //Constructeur qui charge l'historique depuis la base de donnees
     public Chat(String friend1, String friend2, Context context) {
         this.friend1 = friend1;
         this.friend2 = friend2;
@@ -42,7 +42,7 @@ public class Chat
         }
         fM.close();
     }
-
+  //getters and settes
     public String getFriend1() {
         return friend1;
     }
@@ -59,6 +59,7 @@ public class Chat
         this.chatHistory = chatHistory;
 
     }
+    //permet d'envoyer un message
     public void sendMessage(String message, String friend, Context context){
         //TODO fucking date !
         String trueMsg = chatHistory + '['+ friend + ',';
