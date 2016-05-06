@@ -1,6 +1,7 @@
 package lsinf1225.uclove;
 
 /**
+ * Classe qui lie deux amis et leur chat ou juste une request d'ami si le chat vaut null
  * Created by cariamole on 29.04.16.
  */
 public class Friendship {
@@ -15,7 +16,7 @@ public class Friendship {
     }
 
     public Friendship(){}
-
+    
     public String getLogin1(){
         return this.login1;
     }
