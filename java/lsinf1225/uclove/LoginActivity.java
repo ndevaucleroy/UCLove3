@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //
-    private static final String VALID_USERNAME_CHAR = "[a-zA-Z0-9_-]{3,15}$";
+    //caracteres valides pour le login et le mot de passe
+    private static final String VALID_LOGIN_CHAR = "[a-zA-Z0-9_-]{3,15}$";
     private static final String VALID_PASSWORD_CHAR = "[a-zA-Z0-9_-]{6,20}$";
 
     private EditText login, password;
@@ -28,21 +28,25 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        
+        //faire correspondre les activitys au xml
         signInButton = (Button) findViewById(R.id.signin);
         registerButton = (Button) findViewById(R.id.register);
         login = (EditText) findViewById(R.id.login);
         password = (EditText) findViewById(R.id.password);
         registerButton = (Button) findViewById(R.id.register);
-
-        signInButton.setOnClickListener(new View.OnClickListener()
-            {@Override public void onClick(View v) { tryToLogIn(); }});
-
         confirmPassword = (EditText) findViewById(R.id.confirmpassword);
         email = (EditText) findViewById(R.id.email);
+        
+        //au clic de ce bouton, essai de connexion
+        signInButton.setOnClickListener(new View.OnClickListener()
+            {@Override public void onClick(View v) { tryToLogIn(); }});
+        
+        //cacher ces deux editTexts
         confirmPassword.setVisibility(View.GONE);
         email.setVisibility(View.GONE);
 
+        //au clic de ce bouton, essai d'inscription
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,75 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void userLogin(String username, String stringpassword) {
-
-        if (!User.isLoginAvailable(username, this)) {
-            MyApplication.setUser(new User(username, this));
-            if (MyApplication.getUser().getPasswordStr() != null){
-                if (!stringpassword.equals(MyApplication.getUser().getPasswordStr())) {
-                    Toast.makeText(LoginActivity.this, "Password you've given =\"" + stringpassword +
-                            "\" Correct password is: \"" + MyApplication.getUser().getPasswordStr()+"\"", Toast.LENGTH_SHORT).show();
-                    sendError(password, "Error: Incorrect Password");
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Correct password!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, ProfileActivity.class);
-                    startActivity(intent);
-                }
-            }
-            else{
-                Toast.makeText(LoginActivity.this, "Password null", Toast.LENGTH_SHORT).show();
-            }
-        } else showRegister();
-    }
-
-
-    private void showRegister() {
-        isRegisterShown = true;
-
-        // Hide login button
-        signInButton.setVisibility(View.GONE);
-
-        // Display additional fields and register button.
-        confirmPassword.setVisibility(View.VISIBLE);
-        email.setVisibility(View.VISIBLE);
-        registerButton.setVisibility(View.VISIBLE);
-
-        // Change focus to the next field to fill.
-        confirmPassword.requestFocus();
-    }
-
-    private void hideRegister(){
-        isRegisterShown = false;
-
-        // Hide additional fields and register button.
-        registerButton.setVisibility(View.GONE);
-        email.setVisibility(View.GONE);
-        confirmPassword.setVisibility(View.GONE);
-
-        // Display login button.
-        signInButton.setVisibility(View.VISIBLE);
-
-        // Change focus to the username field.
-        login.requestFocus();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isRegisterShown) {
-            hideRegister();
-        } else {
-            finish();
-        }
-    }
-
     private void tryToLogIn() {
 
         setErrorsToNull();
 
         String username = login.getText().toString();
         String stringpassword = password.getText().toString();
-
+        
         if (TextUtils.isEmpty(username)) {
             sendError(login, "Error field required: please fill all the fields");
             return;
@@ -137,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
             sendError(password, "Error: Password is invalid");
             return;
         }
-
+        
+        //si toutes les erreurs sont gerees, on se connecte
         userLogin(username, stringpassword);
     }
 
@@ -189,8 +132,73 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        //si toutes les erreurs sont gerees, on inscrit le nouvel utilisateur
         userRegister(username, stringpassword, stringemail);
     }
+
+    private void userLogin(String username, String stringpassword) {
+
+        if (!User.isLoginAvailable(username, this)) {
+            MyApplication.setUser(new User(username, this));
+            if (MyApplication.getUser().getPasswordStr() != null){
+                if (!stringpassword.equals(MyApplication.getUser().getPasswordStr())) {
+                    //mot de passe incorrect
+                    sendError(password, "Error: Incorrect Password");
+                }
+                else{
+                    //demarrage d'une nouvelle activite
+                    Toast.makeText(LoginActivity.this, "Correct password!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+            }
+            else{
+                Toast.makeText(LoginActivity.this, "Password null", Toast.LENGTH_SHORT).show();
+            }
+        } else showRegister();
+    }
+
+
+    private void showRegister() {
+        isRegisterShown = true;
+
+        // Hide login button
+        signInButton.setVisibility(View.GONE);
+
+        // Display additional fields and register button.
+        confirmPassword.setVisibility(View.VISIBLE);
+        email.setVisibility(View.VISIBLE);
+        registerButton.setVisibility(View.VISIBLE);
+
+        // Change focus to the next field to fill.
+        confirmPassword.requestFocus();
+    }
+
+    private void hideRegister(){
+        isRegisterShown = false;
+
+        // Hide additional fields and register button.
+        registerButton.setVisibility(View.GONE);
+        email.setVisibility(View.GONE);
+        confirmPassword.setVisibility(View.GONE);
+
+        // Display login button.
+        signInButton.setVisibility(View.VISIBLE);
+
+        // Change focus to the username field.
+        login.requestFocus();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isRegisterShown) {
+            hideRegister();
+        } else {
+            finish();
+        }
+    }
+
+    
 
     private void userRegister(String username, String stringpassword, String stringemail) {
 
@@ -206,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isUsernameValid(String username) {
-        return Pattern.compile("^"+VALID_USERNAME_CHAR+"{3,20}$").matcher(username).matches();
+        return Pattern.compile("^"+VALID_LOGIN_CHAR+"{3,20}$").matcher(username).matches();
     }
 
     private boolean isPasswordValid(String password) {
