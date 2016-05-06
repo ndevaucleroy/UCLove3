@@ -32,11 +32,12 @@ public class FriendProfileActivity extends AppCompatActivity {
         rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRate();
+                showRate(); //lance la boite de dialogue de cotation
             }
         });
 
         chat = (Button) findViewById(R.id.chat);
+        //lance  la discussion quand clique
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +45,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        // spiner montrant les disponibilite communes
         date = (Spinner) findViewById(R.id.date);
         final AvailabilityManager aM = new AvailabilityManager(this);
         aM.open();
@@ -52,6 +53,9 @@ public class FriendProfileActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, aM.getSameAvailability(MyApplication.getUser(), MyApplication.getUserChat()));
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         date.setAdapter(dataAdapter);
+        // fin du set du spinner
+        
+        //bouton creant un rendez-vous selon la date selectionnee
         propose = (Button) findViewById(R.id.propose);
         propose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,12 +119,13 @@ public class FriendProfileActivity extends AppCompatActivity {
 
 
     }
-
+    //cree la boite de dialogue de cotation
     public void showRate(){
         final AlertDialog.Builder rateD = new AlertDialog.Builder(this);
         final RatingBar rate = new RatingBar(this);
         LinearLayout wid = new LinearLayout(FriendProfileActivity.this);
         wid.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        //initialisation de la ratebare
         rate.setMax(5);
         rate.setNumStars(5);
         rate.setStepSize(1);
@@ -128,16 +133,18 @@ public class FriendProfileActivity extends AppCompatActivity {
         rateD.setMessage("Do you want to rate " + MyApplication.getUserChat().getNameStr());
         rateD.setView(wid);
         wid.addView(rate);
+        //valide la cotation
         rateD.setPositiveButton("Rate",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Score score = new Score(MyApplication.getUser().getLoginStr(), MyApplication.getUserChat().getLoginStr(), rate.getProgress());
-                        Score.addScore(MyApplication.getUser(), MyApplication.getUserChat(), rate.getProgress(), FriendProfileActivity.this);
-                        Toast.makeText(FriendProfileActivity.this, "Rating : " + String.valueOf(rate.getRating()), Toast.LENGTH_LONG).show();
+                        Score.addScore(MyApplication.getUser(), MyApplication.getUserChat(), rate.getProgress(), FriendProfileActivity.this); //modifie la BDD avec la note
+                        Toast.makeText(FriendProfileActivity.this, "Rating : " + String.valueOf(rate.getRating()), Toast.LENGTH_LONG).show(); //retour visuel
                         dialog.dismiss();
                     }
                 });
 
+        //annule la cotation
         rateD.setNegativeButton("Nope",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
