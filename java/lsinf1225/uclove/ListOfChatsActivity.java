@@ -58,22 +58,30 @@ public class ListOfChatsActivity extends AppCompatActivity {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), SettingsActivity.class);
                 startActivity(intent); } });
+        
         ///////////////////FIN BOUTONS DE MENU//////////////////////
-
+        
         noFriendsImage = (ImageView) findViewById(R.id.nofriends);
 
         try{
+            //definition de la liste d'amis du user
             listOfFriends = MyApplication.getUser().getFriends().getFriendsUsr(this);
-
+            
+            //definition d'un nouveau linearlayout
             final LinearLayout ll = (LinearLayout) findViewById(R.id.listoffriends);
+            
             if (listOfFriends.size() != 0)
+                //montrer l'image disant que le user n'a pas encore d'amis
                 noFriendsImage.setVisibility(View.GONE);
-
+            
+            //creation recursive d'une liste de boutons menant vers la discussion correspondante
+            //au friend (objet user) faisant partie de la liste d'amis du user principal 
             for(i = 0 ; i<listOfFriends.size(); i++){
                 try{
+                    //definition d'un nouveau linearlayout et reglage des parametres
                     LinearLayout wid = new LinearLayout(ListOfChatsActivity.this);
                     wid.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
+                    
                     Button btn = new Button(ListOfChatsActivity.this);
                     LinearLayout.LayoutParams layoutparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                     layoutparam.setMargins(10, 5, 10, 5);
