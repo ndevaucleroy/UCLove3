@@ -11,14 +11,15 @@ import java.util.ArrayList;
  */
 public class User
 {
-    private String passwordStr;
+    private String passwordStr; //attributs
     private String loginStr, firstNameStr, nameStr, placeStr, birthdayStr, languageStr,
             hairStr, eyesStr, descriptionStr, genderStr, orientationStr;
     private Friends friends;
     private Favorite favorite;
     /**
-     * Constructor for objects of class User
+     * Constructor for class User
      */
+     //Contructor 1 pour inscrire un nouvel User dans la base de donnee
     public User(String passwordStr, String loginStr, String  firstNameStr,
                 String  nameStr, String  placeStr, String birthdayStr, String languageStr,
                 String hairStr, String  eyesStr, String descriptionStr, String genderStr, String  orientationStr, Favorite favorite, Context context)//constructeur pour un tout nouvel utilisateur
@@ -42,9 +43,10 @@ public class User
         uM.addUser(this);
         uM.close();
     }
-
+    //constructeur vide
     public User(){
     }
+    //constructeur 2 pour login un User qui est deja inscrit dans la base de donnée
     public User(String loginStr, Context context) { //in order to load an User from the database
         this.loginStr = loginStr;
         UserManager uM = new UserManager(context);
@@ -98,13 +100,14 @@ public class User
             return true;}
         return false;
     }
+    //permet de synchroniser les attributs de la classe avec la base de donnee.
     public void updateDatabase(Context context){
         UserManager uM = new UserManager(context);
         uM.open();
         uM.modUser(this);
         uM.close();
     }
-
+   //getters et setters
     public Favorite getFavorite(){
         return this.favorite;
     }
@@ -136,7 +139,7 @@ public class User
     public int getAgeMax() {
         return favorite.getMax();
     }
-
+    //permet de verifier sur la base de donnee la presence d'un login
     public static boolean isLoginAvailable(String username, Context context){
         UserManager uM = new UserManager(context);
         uM.open();
