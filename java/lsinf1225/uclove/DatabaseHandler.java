@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-
+//Classe de la creation de la database
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     //SQLite Name, Version, instance
     private static final String DATABASE_NAME = "db.sqlite";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 1;
     private static DatabaseHandler sInstance;
 
     //Drop Table
@@ -31,7 +31,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME , null, DATABASE_VERSION);
     }
-
+    //creation de la database en fonction des requete SQL dans les differents manager
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(UserManager.PERSON_TABLE_CREATE);
@@ -40,7 +40,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(FriendshipManager.FRIENDSHIP_TABLE_CREATE);
         db.execSQL(RendezVousManager.RENDEZVOUS_TABLE_CREATE);
         db.execSQL(AvailabilityManager.AVAILABILITY_TABLE_CREATE);
-
+        
+        
+        //Creation d'une population
         db.execSQL("INSERT INTO person VALUES(\"Maasym\",\"Charleroi\",\"Gabeline\",\"Hadagonde\",\"1915-06-20\",\"Français\",\"other\",\"blue\",\"password\",\"Euh...flemme... prout d'ecrire une description\",\"F\",\"M\",48656900)");
         db.execSQL("INSERT INTO person VALUES(\"Mabsuthat\",\"Charleroi\",\"Gabrienne\",\"Haddee\",\"1951-10-22\",\"Français\",\"other\",\"green\",\"password\",\"Euh...flemme... prout d'ecrire une description\",\"M\",\"B\",30011947)");
         db.execSQL("INSERT INTO person VALUES(\"Maia\",\"Liege\",\"Gacienne\",\"Haddie\",\"1917-09-06\",\"English\",\"blond\",\"green\",\"password\",\"Euh...flemme... prout d'ecrire une description\",\"F\",\"B\",186285744)");
@@ -141,7 +143,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO friendship VALUES(\"Maia\",\"Men\",\"BlablbalalalezklnCanailleo,fzlkne\")");
         db.execSQL("INSERT INTO friendship VALUES(\"Maia\",\"Menka\",\"BlablbalalalezklnCanailleo,fzlkne\")");
     }
-
+    
+    //mise à jour de la base de donnees si une version plus recente est donnee
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(PERSON_TABLE_DROP);
