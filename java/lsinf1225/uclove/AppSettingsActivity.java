@@ -20,6 +20,8 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
     private ImageButton yesOrNoButton, friendsRequestButton, friendsButton, profileButton, settingsButton;
     private ImageButton changeLanguageButton, changePasswordButton, changeThemeButton;
     private EditText passwordView, confirmPasswordView;
+    
+    //Mot de passe valide
     private static final String VALID_PASSWORD_CHAR = "[a-zA-Z0-9_-]{6,20}$";
 
     @Override
@@ -55,21 +57,21 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
                 Intent intent = new Intent(v.getContext(), SettingsActivity.class);
                 startActivity(intent); } });
         ///////////////////FIN BOUNTONS DE MENU///////////////////
-
+        
+        //assignation des boutons aux id correspondant
         changeLanguageButton = (ImageButton) findViewById(R.id.confirm1);
         changePasswordButton = (ImageButton) findViewById(R.id.confirm3);
         changeThemeButton = (ImageButton) findViewById(R.id.confirm4);
-
         passwordView = (EditText) findViewById(R.id.changePassword);
         confirmPasswordView = (EditText) findViewById(R.id.confirmChangePassword);
-
+        
         changeLanguageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tryChangePassword(passwordView.getText().toString(), confirmPasswordView.getText().toString());
             }
         });
-
+        
         //Spinner Language
         Spinner spinnerLanguage = (Spinner) findViewById(R.id.languageSpinner);
         spinnerLanguage.setOnItemSelectedListener(this);
@@ -79,12 +81,11 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
         ArrayAdapter<String> dataAdapterLanguage = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesLanguage);
         dataAdapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguage.setAdapter(dataAdapterLanguage);
-
         if(MyApplication.getUser().getLanguageStr().equals("Français"))
             spinnerLanguage.setSelection(2);
 
 
-        //Spinner Theme
+        /*//Spinner Theme
         Spinner spinnerTheme = (Spinner) findViewById(R.id.themeSpinner);
         spinnerTheme.setOnItemSelectedListener(this);
         List<String> categoriesTheme = new ArrayList<String>();
@@ -93,28 +94,29 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
         categoriesTheme.add("Blue");
         ArrayAdapter<String> dataAdapterTheme = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesTheme);
         dataAdapterTheme.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTheme.setAdapter(dataAdapterTheme);
-        /*if(MyApplication.getUser().getThemeStr().equals("Pink"))
-            spinnerLanguage.setSelection(2);
-        if(MyApplication.getUser().getThemeStr().equals("Blue"))
-            spinnerLanguage.setSelection(3);*/
+        spinnerTheme.setAdapter(dataAdapterTheme);*/
 
     }
 
     private void tryChangePassword(String passwordStr, String confirmPasswordStr){
+        //reinitialisation des erreurs
         setErrorsToNull();
+        //si le mot de passe est incorrect
         if(!passwordStr.equals(confirmPasswordStr)){
             sendError(confirmPasswordView,"Passwords don't match");
             return;
         }
+        //si mot de passe non valide
         if(!isPasswordValid(passwordStr)){
             sendError(passwordView,"Invalid password: password can only contain letters and numbers");
             sendError(confirmPasswordView,"Invalid password: password can only contain letters and numbers");
             return;
         }
-
+        //si mot de passe correct
         changePassword(passwordStr);
     }
+    
+    //change le mot de passe du user dans la base de donnees
     private void changePassword(String newPassword){
         MyApplication.getUser().setPasswordStr(newPassword);
         UserManager uM=new UserManager(this);
@@ -122,6 +124,7 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
         uM.modUser(MyApplication.getUser());
         uM.close();
     }
+    
     private boolean isPasswordValid(String password) {
         return Pattern.compile("^" + VALID_PASSWORD_CHAR + "{5,50}$").matcher(password).matches();
     }
@@ -133,7 +136,7 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
         passwordView.setError(null);
         confirmPasswordView.setError(null);
     }
-
+    
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // On selecting a spinner item
         String item;
@@ -156,8 +159,6 @@ public class AppSettingsActivity extends AppCompatActivity implements AdapterVie
         uM.close();
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
+    public void onNothingSelected(AdapterView<?> parent) { }
 
 }
