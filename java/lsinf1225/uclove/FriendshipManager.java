@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 /**
+ * Classe qui gere les requete sur la table friendship
  * Created by cariamole on 29.04.16.
  */
 public class FriendshipManager {
@@ -17,7 +18,7 @@ public class FriendshipManager {
     public static final String FRIENDSHIP_LOGIN1 = "login1";
     public static final String FRIENDSHIP_LOGIN2 = "login2";
     public static final String FRIENDSHIP_CHAT = "chat";
-
+    // Ligne pour creer la table
     public static final String FRIENDSHIP_TABLE_CREATE =
             "CREATE TABLE " + TABLE_FRIENDSHIP + " (" +
                     FRIENDSHIP_LOGIN1 + " TEXT not null references " + TABLE_PERSON + ", " +
@@ -31,7 +32,7 @@ public class FriendshipManager {
     public FriendshipManager(Context context) {
         maBaseSQLite = DatabaseHandler.getInstance(context);
     }
-
+    
     public void open() {
         db = maBaseSQLite.getWritableDatabase();
     }
@@ -39,7 +40,7 @@ public class FriendshipManager {
     public void close() {
         db.close();
     }
-
+    // fonction pour rajouter un ami
     public long addFriendship(Friendship friendship){
         ContentValues values = new ContentValues();
 
@@ -48,7 +49,7 @@ public class FriendshipManager {
         values.put(FRIENDSHIP_CHAT, friendship.getChat());
         return db.insert(TABLE_FRIENDSHIP, null, values);
     }
-
+    // fonction pour modifier un ami
     public int modFriendship(Friendship friendship){
         ContentValues values=new ContentValues();
         values.put(FRIENDSHIP_LOGIN1, friendship.getLogin1());
@@ -60,14 +61,14 @@ public class FriendshipManager {
 
         return db.update(TABLE_FRIENDSHIP, values, where, whereArgs);
     }
-
+    // fonction pour supprimer un ami
     public int supFriendship(Friendship friendship){
         String where = FRIENDSHIP_LOGIN1+" = ? and "+FRIENDSHIP_LOGIN2+" = ? ";
         String[] whereArgs={""+friendship.getLogin1(),""+friendship.getLogin2()};
 
         return db.delete(TABLE_FRIENDSHIP, where, whereArgs);
     }
-
+    // retourne le chat entre 2 users si il existe
     public String getChatHistory(User user, User otherUser) {
         Cursor c = db.rawQuery("SELECT chat FROM "+TABLE_FRIENDSHIP+" WHERE (("
                 +FRIENDSHIP_LOGIN1+" = '"+user.getLoginStr()+"' AND "+ FRIENDSHIP_LOGIN2+" = '"+otherUser.getLoginStr()+"') OR ("
@@ -91,6 +92,8 @@ public class FriendshipManager {
         }
         return f;
     }
+    
+    // retourne une liste d'ami de login1
     public ArrayList<String> getFriendsStr(String login1){
         ArrayList<String> list= new ArrayList();
 
@@ -110,6 +113,8 @@ public class FriendshipManager {
         d.close();
         return list;
     }
+    
+    // retourne une liste des users qui ont envoye un demande a login2
     public ArrayList<String> getRecFriendsRequestStr(String login2){
         ArrayList<String> list= new ArrayList();
 
@@ -122,6 +127,8 @@ public class FriendshipManager {
         c.close();
         return list;
     }
+    
+    // retourne une liste des users que login1 a demande en ami
     public ArrayList<String> getSentFriendsRequestStr(String login1){
         ArrayList<String> list= new ArrayList();
 
