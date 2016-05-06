@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 
 /**
- * Write a description of class Friends here.
- *
+ * Gere la liste d'amis des User
+ * 
  * @author Groupe P
  * @version 25.04.2016
  */
@@ -24,9 +24,9 @@ public class Friends
     /*private Chat friendChat;*/
 
     /**
-     * Constructor for objects of class Friends
+     * Constructor avec deux variantes en fonction desi le user existait ou pas en base de donnees.
      */
-
+    
     public Friends(String listOwnerStr, boolean alreadyCreated, Context context){
         if(alreadyCreated){
             this.listOwnerStr = listOwnerStr;
@@ -47,7 +47,7 @@ public class Friends
         }
 
     }
-
+//permet d'envoyer une demande d'ami
     public boolean sendFriendRequest(String target, Context context){ //sends true if worked, sends false if it was already a friend
             FriendshipManager fM = new FriendshipManager(context);
             fM.open();
@@ -56,7 +56,7 @@ public class Friends
             fM.close();
             return true;
         }
-
+//permet d'accepter une demande d'ami
     public void acceptFriendRequest(User target, Context context){
         recFriendsRequestsStr.remove(target);
         friendsListStr.add(target.getLoginStr());
@@ -66,6 +66,7 @@ public class Friends
         fM.close();
 
     }
+    //permet de refuser une demande d'ami
     public void refuseFriendRequest(User target, Context context){
         recFriendsRequestsStr.remove(target);
         FriendshipManager fM = new FriendshipManager(context);
@@ -75,6 +76,7 @@ public class Friends
         }
         fM.close();
     }
+    //permet de supprimer un ami
     public void deleteFriend(String target, Context context){
         friendsListStr.remove(target);
         FriendshipManager fM = new FriendshipManager(context);
@@ -84,6 +86,7 @@ public class Friends
         }
         fM.close();
     }
+    //getters and setters
     public String getListOwnerStr() {
         return listOwnerStr;
     }
@@ -99,7 +102,7 @@ public class Friends
     public String[] getSentFriendsRequestsStr() {
         return (String[])sentFriendsRequestsStr.toArray();
     }
-
+    //permet d'obtenir la liste d'amis, mais avec des User
     public User[] getFriendsListUsr(Context context) { //on load les users
         User []friendsListUsr = new User[friendsListStr.size()];
         for(int i = 0;i < friendsListStr.size();i++){
@@ -107,7 +110,7 @@ public class Friends
         }
         return friendsListUsr;
     }
-
+        //de même mais avec une ArrayList
     public ArrayList<User> getFriendsUsr(Context context) {
         UserManager uM = new UserManager(context);
         ArrayList<User> FrUsr = new ArrayList();
@@ -122,7 +125,7 @@ public class Friends
         return FrUsr;
     }
 
-
+    //permet de recuperer les demandes d'amis envoyes
     public ArrayList<User> getSentFriendsRequestsUsr(Context context) {
         UserManager uM = new UserManager(context);
         ArrayList<User> sentFrReqUsr = new ArrayList();
@@ -135,7 +138,7 @@ public class Friends
 
         return sentFrReqUsr;
     }
-
+    //de meme pour les demandes recues
     public ArrayList<User> getRecFriendsRequestsUsr(Context context) {
         //UserManager uM = new UserManager(context);
         ArrayList<User> recFrReqUsr = new ArrayList();
